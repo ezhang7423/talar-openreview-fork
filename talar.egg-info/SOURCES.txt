@@ -1,0 +1,11 @@
+setup.py
+talar/ball_train.py
+talar/kitchen_train.py
+talar/train_tl_balls.py
+talar/train_tl_kitchen.py
+talar/train_translator_balls.py
+talar/train_translator_kitchen.py
+talar.egg-info/PKG-INFO
+talar.egg-info/SOURCES.txt
+talar.egg-info/dependency_links.txt
+talar.egg-info/top_level.txt

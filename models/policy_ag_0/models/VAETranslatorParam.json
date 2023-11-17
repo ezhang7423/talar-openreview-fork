@@ -1,1 +1,0 @@
-{"human_l_dim": 32, "policy_l_dim": 28, "lantent_dim": 64, "hidden_dim": 128, "loss_type": "mse", "seperate_obj_pred_loss": false, "num_pu": 2, "num_pred": 4, "object_loss_coef": 0.05, "latent_type": "binary"}
