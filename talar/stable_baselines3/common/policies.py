@@ -4,6 +4,7 @@ import collections
 import copy
 from abc import ABC, abstractmethod
 from functools import partial
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
 
 import gym
@@ -449,6 +450,8 @@ class ActorCriticPolicy(BasePolicy):
         self.activation_fn = activation_fn
         self.ortho_init = ortho_init
 
+        if str(self.features_extractor_kwargs['language_model_kwargs']['model_path']) == '/home/pangjc/language_rl/models/kitchen_pu_1_pred_4_0':
+            self.features_extractor_kwargs['language_model_kwargs']['model_path'] = Path('/home/ubuntu/talar/talar-openreview/talar/models/kitchen_policy_ag_0')
         self.features_extractor = features_extractor_class(self.observation_space, **self.features_extractor_kwargs)
         self.features_dim = self.features_extractor.features_dim
 

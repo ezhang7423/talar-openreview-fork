@@ -884,7 +884,7 @@ class LangGCPExtractor(BaseFeaturesExtractor):
         coordinate_latent = observations[..., :self.language_model.coordinate_dim]
         
         language_feature = observations[..., self.language_model.coordinate_dim:]
-        language_latent = self.language_model(language_feature)
+        language_latent = self.language_model(language_feature).to(coordinate_latent)
         
         latent = th.cat((coordinate_latent, language_latent), dim=-1)
      
