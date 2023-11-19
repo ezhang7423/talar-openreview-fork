@@ -32,6 +32,7 @@ import envs.clevr_robot_env.third_party.clevr_robot_env_utils.question_engine as
 
 from envs.clevr_robot_env.utils import load_utils
 from envs.clevr_robot_env.utils.xml_utils import convert_scene_to_xml
+from serialize_scene_struct import serialize
 
 try:
     import cv2
@@ -1042,11 +1043,15 @@ class Lang1Env(LangEnv):
 
         return obs
 
-    def reset(self, new_scene_content=True, dir=None):
+    def reset(self, new_scene_content=True, dir=None, scene_struct=None):
         """Reset with a random configuration."""
         if new_scene_content or not self.variable_scene_content:
             # sample a random scene and struct
-            self.scene_graph, self.scene_struct = self.sample_random_scene()
+            if scene_struct is None:
+                self.scene_graph, self.scene_struct = self.sample_random_scene()
+            else:
+                self.scene_graph = scene_struct['objects']
+                self.scene_struct = scene_struct
         else:
             # randomly perturb existing objects in the scene
             new_graph = gs.randomly_perturb_objects(self.scene_struct,
@@ -1280,6 +1285,14 @@ class LangGCPEnv(Lang2Env):
         self.dir = recons_orientation_idx
         self.delta_xy = self.update_delta_xy(dir=self.dir)
 
+    def step(self, act, **kwargs):
+        new_obs, rewards, dones, infos = super().step(act, **kwargs)
+        if infos is None:
+            infos =  serialize(self.scene_struct)
+        else:
+            infos['scene_graph'] = serialize(self.scene_struct)
+        return new_obs, rewards, dones, infos
+        
     def reset_mdp_utils(self, dir=None):
         new_template_idx = np.random.choice(np.arange(self.reset_template_arr.size))
         new_template = self.reset_template_arr[new_template_idx]

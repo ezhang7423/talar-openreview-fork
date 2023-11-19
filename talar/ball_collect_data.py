@@ -88,7 +88,6 @@ def features2goal(language_features: th.Tensor, is_kitchen: bool =False) -> list
     
     return language_goal_list
 # %%
-
 def collect_rollouts(
     agent,
     env: VecEnv,
@@ -133,15 +132,14 @@ def collect_rollouts(
             # Reshape in case of discrete action
             actions = actions.reshape(-1, 1)
 
-        
         buffer['actions'].append(actions)
         buffer['obs'].append(obs[:, :-3])
         buffer['rewards'].append(rewards)
         buffer['dones'].append(dones)
         buffer['language_goal'].append(features2goal(obs_tensor[:, -3:]))
         buffer['obs_goal'].append(obs[:, -3:])
-        
-            
+        buffer['scene_graph'].append(np.array(list(i['scene_graph'] for i in infos)))
+           
         # rollout_buffer.add(obs, actions, rewards, agent._last_episode_starts, values, log_probs)
         obs = new_obs
         
@@ -181,7 +179,8 @@ def main(NUM_ENVS: int = 2, N_STEPS: int = 20):
         'rewards': [],
         'dones': [],
         'language_goal': [],
-        'obs_goal': []        
+        'obs_goal': [], 
+        'scene_graph': []
     }
     # env.reset()
     # call once since the first episode is buggy for some reason
@@ -191,9 +190,10 @@ def main(NUM_ENVS: int = 2, N_STEPS: int = 20):
         buffer,
         N_STEPS,
     )
-    from eztils import inspect
-    inspect(buf)
-    th.save(buf, 'buf.pt')
+    # from eztils import inspect
+    # inspect(buf)
+    from eztils import datestr
+    th.save(buf, f'buf_{datestr(full=False)}.pt')
 
 if __name__ == '__main__': 
     # add typer
