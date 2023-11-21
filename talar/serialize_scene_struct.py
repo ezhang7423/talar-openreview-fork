@@ -300,7 +300,7 @@ if __name__ == '__main__':
         }
     }
     """
-    from lcd.apps.train_gcbc import setup_env
+    from lcd.utils.clevr.eval import setup_env
     from rich import print
     env = setup_env()
     e = env.envs[0]    
